@@ -10,13 +10,26 @@ class TestBaseModel(unittest.TestCase):
         """Create an instance of BaseModel for testing."""
         self.model = BaseModel()
 
-    def test_instance_creation(self):
-        """Test if an instance of BaseModel is created with correct attributes."""
+    def test_instance_creation_with_default(self):
+        """Test if an instance of BaseModel is created with default attributes."""
         self.assertIsInstance(self.model, BaseModel)
         self.assertIsInstance(self.model.id, str)
         self.assertIsInstance(uuid.UUID(self.model.id), uuid.UUID)
         self.assertIsInstance(self.model.created_at, datetime.datetime)
         self.assertIsInstance(self.model.updated_at, datetime.datetime)
+
+    def test_instance_creation_with_kwargs(self):
+        """Test if an instance of BaseModel is created correctly with kwargs."""
+        now = datetime.datetime.now().isoformat()
+        kwargs = {
+                "id": str(uuid.uuid4()),
+                "created_at": now,
+                "updated_at": now
+                }
+        model_with_kwargs = BaseModel(**kwargs)
+        self.assertEqual(model_with_kwargs.id, kwargs["id"])
+        self.assertEqual(model_with_kwargs.created_at, datetime.datetime.fromisoformat(now))
+        self.assertEqual(model_with_kwargs.updated_at, datetime.datetime.fromisoformat(now))
 
     def test_save_method(self):
         """Test if `save` method updates `updated_at` attribute."""
