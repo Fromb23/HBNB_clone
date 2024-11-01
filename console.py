@@ -59,6 +59,15 @@ class HBNBCommand(cmd.Cmd):
             del self.filestorage.all()[key]
             self.filestorage.save()
 
+    def do_all(self, arg):
+        obj = arg.split()
+
+        if len(obj) < 1:
+            print("** class name missing **")
+            return
+
+        print(self.filestorage.all())
+
     def do_quit(self, obj):
         """Quit command to exit the program"""
         return True
