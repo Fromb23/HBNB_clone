@@ -68,6 +68,45 @@ class HBNBCommand(cmd.Cmd):
 
         print(self.filestorage.all())
 
+    def do_update(self, arg):
+        obj = arg.split()
+
+        if len(obj) < 1:
+            print("** class name missing **")
+            return
+        else:
+            if obj[0] not in self.class_dict:
+                print("** class doesn't exist **")
+                return
+            
+        if len(obj) < 2:
+            print("** instance id missing **")
+            return
+        else:
+            key = obj[0] + '.' + obj[1]
+            if key not in self.filestorage.all():
+                print("** no instance found **")
+                return
+            else:
+                pass
+
+        if len(obj) < 3:
+            print("** attribute name missing **")
+            return
+        elif len(obj) < 4:
+            print("** value missing **")
+            return
+
+        new_attr = {}
+        new_attr[obj[2]] = obj[3]
+
+        if key in self.filestorage.all():
+            basemodel_dict = self.filestorage.all()[key]
+            my_dict = basemodel_dict.__dict__
+            my_dict.update(new_attr)
+            print(basemodel_dict)
+            self.filestorage.save()
+
     def do_quit(self, obj):
         """Quit command to exit the program"""
         return True
