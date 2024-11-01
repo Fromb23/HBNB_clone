@@ -13,6 +13,8 @@ class HBNBCommand(cmd.Cmd):
 
     prompt = '(hbnb) '
 
+    filestorage = FileStorage()
+
     def do_create(self, obj):
         """Creates a new instance of BaseModel, saves it, and prints the id"""
         if not obj:
@@ -36,11 +38,26 @@ class HBNBCommand(cmd.Cmd):
             return
 
         key = obj[0] + '.' + obj[1]
-        filestorage = FileStorage()
-        if key in filestorage.all():
-            print(f"{filestorage.all()[key]}")
+        if key in self.filestorage.all():
+            print(f"{self.filestorage.all()[key]}")
         else:
-            print("** class doesn't exist **")
+            print("** no instance found **")
+
+    def do_destroy(self, arg):
+        obj = arg.split()
+
+        if len(obj) < 1:
+            print("** class name is missing **")
+            return
+        elif len(obj) < 2:
+            print("** instance id missing **")
+            return
+
+        key = obj[0] + '.' + obj[1]
+
+        if key in self.filestorage.all():
+            del self.filestorage.all()[key]
+            self.filestorage.save()
 
     def do_quit(self, obj):
         """Quit command to exit the program"""
